@@ -1,0 +1,199 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"UserRole": {
+				"enum": [
+					"admin",
+					"user"
+				],
+				"type": "string"
+			},
+			"UserMasterPojo": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"mobile": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"isActive": {
+						"type": "boolean"
+					},
+					"userRole": {
+						"$ref": "#/components/schemas/UserRole"
+					},
+					"createdDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"lastUpdatedDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"token": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"firstName",
+					"lastName",
+					"email",
+					"mobile",
+					"password",
+					"isActive",
+					"userRole",
+					"createdDate",
+					"lastUpdatedDate",
+					"token"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AuthorizedUser": {
+				"properties": {
+					"user": {
+						"$ref": "#/components/schemas/UserMasterPojo"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"user",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LoginPojo": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"email": {
+						"type": "string"
+					},
+					"mobile": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"token": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"email",
+					"mobile",
+					"password",
+					"token"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "vr_vista_server",
+		"version": "1.0.0",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/user-manager/register": {
+			"post": {
+				"operationId": "Register",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserMasterPojo"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User Manager"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserMasterPojo"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user-manager/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthorizedUser"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User Manager"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginPojo"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}
