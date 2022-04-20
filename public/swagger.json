@@ -68,6 +68,65 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"AddressPojo": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"flatNo": {
+						"type": "string"
+					},
+					"lineNoA": {
+						"type": "string"
+					},
+					"lineNoB": {
+						"type": "string"
+					},
+					"landmark": {
+						"type": "string"
+					},
+					"city": {
+						"type": "string"
+					},
+					"state": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"userId": {
+						"$ref": "#/components/schemas/UserMasterPojo"
+					},
+					"isActive": {
+						"type": "boolean"
+					},
+					"createdDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"lastUpdatedDate": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"flatNo",
+					"lineNoA",
+					"lineNoB",
+					"landmark",
+					"city",
+					"state",
+					"country",
+					"userId",
+					"isActive",
+					"createdDate",
+					"lastUpdatedDate"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"AuthorizedUser": {
 				"properties": {
 					"user": {
@@ -135,7 +194,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/UserMasterPojo"
+									"$ref": "#/components/schemas/AddressPojo"
 								}
 							}
 						}
@@ -151,11 +210,42 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/UserMasterPojo"
+								"$ref": "#/components/schemas/AddressPojo"
 							}
 						}
 					}
 				}
+			}
+		},
+		"/user-manager/logout": {
+			"post": {
+				"operationId": "Logout",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User Manager"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "header",
+						"name": "token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/user-manager/login": {

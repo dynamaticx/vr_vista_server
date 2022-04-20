@@ -6,13 +6,17 @@ import { getRepository } from "typeorm";
 import { randomString } from "../utils/StringUtils";
 import bcrypt from "bcrypt";
 import { AuthorizedUser } from "../pojos/AuthorizedUser";
+import { AddressPojo } from "../pojos/AddressMaster";
+import { AddressMaster } from "../database/entity/AddressMaster";
+
 @Tags("User Manager")
 @Route("/user-manager")
 export default class UserManagerApi {
   @Post("/register")
-  public async register(@Body() user: UserMasterPojo): Promise<UserMasterPojo> {
+  public async register(@Body() address: AddressPojo): Promise<AddressPojo> {
+    const user = address.userId;
+
     const userMaster = new UserMaster();
-    userMaster.id = user.id;
     userMaster.firstName = user.firstName;
     userMaster.lastName = user.lastName;
     userMaster.email = user.email;
@@ -22,7 +26,34 @@ export default class UserManagerApi {
     const salt = await bcrypt.genSalt(10);
     userMaster.password = await bcrypt.hash(user.password, salt);
     userMaster.save();
-    return user;
+
+    const addressMaster = new AddressMaster();
+    addressMaster.flatNo = address.flatNo;
+    addressMaster.lineNoA = address.lineNoA;
+    addressMaster.lineNoB = address.lineNoB;
+    addressMaster.landmark = address.landmark;
+    addressMaster.city = address.city;
+    addressMaster.state = address.state;
+    addressMaster.country = address.country;
+    addressMaster.userId = userMaster;
+    addressMaster.save();
+
+    return address;
+  }
+
+  @Post("/logout")
+  public async logout(@Header("token") token): Promise<String> {
+    const user = await getRepository(UserMaster).findOne({
+      where: { token: token },
+    });
+
+    if (null == user) {
+      return "logout success";
+    } else {
+      user.token = null;
+      await user.save();
+      return "logout success";
+    }
   }
 
   @Post("/login")
@@ -36,10 +67,6 @@ export default class UserManagerApi {
     if (null == user) {
       return;
     }
-
-    if (null == user) {
-      return;
-    }
     const validPassword = await bcrypt.compare(
       loginPojo.password,
       user.password
@@ -49,9 +76,7 @@ export default class UserManagerApi {
       return;
     }
     user.token = undefined;
-    console.log(user.token);
     user.token = randomString(50);
-    console.log(user.token);
 
     user.save();
     const userMasterPojo: UserMasterPojo = {

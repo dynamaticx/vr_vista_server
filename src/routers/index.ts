@@ -19,4 +19,10 @@ router.post("/user-manager/register", async (_req, res) => {
   return res.send(response);
 });
 
+router.post("/user-manager/logout", async (_req, res) => {
+  const userManagerApi: UserManagerApi = new UserManagerApi();
+  const response = await userManagerApi.logout(_req.headers.token);
+  return res.send(response);
+});
+
 export default router;
